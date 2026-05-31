@@ -4,18 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>新5年级摸底测 | 猿辅导</title>
-    <link rel="preload" as="image" href="assets/kid-launch.png">
-    <link rel="preload" as="video" href="assets/launch-motion-test.mp4">
-    <link rel="preload" as="image" href="assets/kid-calm-space.png">
-    <link rel="preload" as="image" href="assets/kid-asteroid-alert.png">
-    <link rel="preload" as="image" href="assets/kid-holo-guide.png">
-    <link rel="preload" as="image" href="assets/kid-repair-action.png">
-    <link rel="preload" as="image" href="assets/kid-success.png">
-    <link rel="preload" as="audio" href="assets/audio/02_launch_xiaoyuan.mp3">
-    <link rel="preload" as="audio" href="assets/audio/03_alert_xiaoyuan.mp3">
-    <link rel="preload" as="audio" href="assets/audio/04_impact_xiaoyuan.mp3">
-    <link rel="preload" as="audio" href="assets/audio/05_repair_xiaoyuan.mp3">
-    <link rel="preload" as="audio" href="assets/audio/06_success_xiaoyuan.mp3">
+    <link rel="preload" as="image" href="assets/mobile/kid-launch.jpg">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -839,7 +828,7 @@
             min-height: 100vh;
             background-image:
                 linear-gradient(180deg, rgba(4,8,32,0.16) 0%, rgba(102,126,234,0.62) 46%, #f5f5f5 64%),
-                url('assets/kid-success.png'),
+                url('assets/mobile/kid-success.jpg'),
                 url('assets/space-mission-xiaoyuan.jpg');
             background-position: center top, center top, center top;
             background-size: auto, cover, cover;
@@ -1057,7 +1046,7 @@
             min-height: 100vh;
             background-image:
                 linear-gradient(180deg, rgba(2,0,36,0.86) 0%, rgba(9,9,121,0.88) 38%, rgba(13,27,74,0.98) 100%),
-                url('assets/kid-repair-action.png');
+                url('assets/mobile/kid-repair-action.jpg');
             background-position: center top, center top;
             background-size: auto, cover;
             background-repeat: no-repeat;
@@ -1114,7 +1103,7 @@
             border-radius: 22px;
             background-image:
                 linear-gradient(90deg, rgba(8,13,48,0.16), rgba(8,13,48,0.84) 42%, rgba(8,13,48,0.96)),
-                url('assets/kid-repair-action.png'),
+                url('assets/mobile/kid-repair-action.jpg'),
                 url('assets/space-mission-xiaoyuan.jpg');
             background-position: center top, 48% 43%, 21% 36%;
             background-size: auto, 118% auto, 188% auto;
@@ -1341,7 +1330,7 @@
             top: 0; left: 0; right: 0; bottom: 0;
             background-image:
                 linear-gradient(180deg, rgba(2,6,23,0.84), rgba(5,9,50,0.94)),
-                url('assets/kid-holo-guide.png'),
+                url('assets/mobile/kid-holo-guide.jpg'),
                 url('assets/space-mission-xiaoyuan.jpg');
             background-position: center top, center top, center top;
             background-size: auto, cover, cover;
@@ -1532,7 +1521,7 @@
             top: 0; left: 0; right: 0; bottom: 0;
             background-image:
                 linear-gradient(180deg, rgba(3,7,28,0.3) 0%, rgba(5,9,50,0.72) 44%, rgba(5,9,50,0.98) 100%),
-                url('assets/kid-success.png'),
+                url('assets/mobile/kid-success.jpg'),
                 url('assets/space-mission-xiaoyuan.jpg');
             background-position: center top, center top, center top;
             background-size: auto, cover, cover;
@@ -1693,7 +1682,7 @@
         .start-bg-video {
             z-index: 0;
             transform: scale(1.015);
-            background: #040833 url('assets/kid-launch.png') center top / cover no-repeat;
+            background: #040833 url('assets/mobile/kid-launch.jpg') center top / cover no-repeat;
         }
         .cinema-bg-img {
             z-index: 0;
@@ -2619,7 +2608,7 @@
         .ai-header {
             background-image:
                 linear-gradient(180deg, rgba(15,23,42,0.34), rgba(30,58,95,0.92)),
-                url('assets/kid-holo-guide.png'),
+                url('assets/mobile/kid-holo-guide.jpg'),
                 url('assets/space-mission-xiaoyuan.jpg');
             background-position: center top, center 28%, center 28%;
             background-size: auto, cover, cover;
@@ -4430,9 +4419,7 @@ function showStartScreen(name) {
     }
     app.innerHTML = `
         <div class="start-bg" id="startScreen" onclick="handleStartClick(event)">
-            <video class="start-bg-video" autoplay muted loop playsinline preload="auto" poster="assets/kid-launch.png">
-                <source src="assets/launch-motion-test.mp4" type="video/mp4">
-            </video>
+            <img class="start-bg-img" src="assets/mobile/kid-launch.jpg" alt="" fetchpriority="high" decoding="async" onerror="this.onerror=null;this.src='assets/kid-launch.png';">
             <div class="start-stars-1"></div>
             <div class="start-stars-2"></div>
             <div class="start-stars-3"></div>
@@ -4481,12 +4468,11 @@ function handleStartClick(e) {
         if (ctx.state === 'suspended') ctx.resume();
         playTone(440, 0.01, 'sine', 0.01);
     } catch(e) {}
-    playVoiceMp3(voiceAudio.ready, 19000).then(function() {
-        return new Promise(resolve => setTimeout(resolve, 250));
-    }).then(function() {
+    playVoiceMp3(voiceAudio.ready, 2500);
+    setTimeout(function() {
         _startLaunching = false;
         showSpaceIntro(_spaceName);
-    });
+    }, 450);
 }
 
 function unlockAndStart() { handleStartClick(); }
@@ -4509,7 +4495,7 @@ function createVoiceAudio(src) {
     if (!src) return null;
     try {
         const audio = new Audio(src);
-        audio.preload = 'auto';
+        audio.preload = 'none';
         audio.crossOrigin = 'anonymous';
         audio.volume = 0.9;
         return audio;
@@ -4624,7 +4610,7 @@ function robotSpeak(text, opts) {
             playVoiceMp3(opts.audio, mp3Ms).then(function(ok) {
                 setMascotSpeaking(false);
                 setTtsActive(false);
-                if (!ok) setTimeout(resolve, mp3Ms);
+                if (!ok) setTimeout(resolve, Math.min(900, mp3Ms));
                 else resolve();
             });
             return;
@@ -4730,7 +4716,7 @@ function showSpaceIntro(name) {
             <div class="cinema-sub" id="cinemaSub"></div>
 
             <div class="cinema-scene s1-bg active" id="scene1">
-                <img class="cinema-bg-img" src="assets/kid-calm-space.png" alt="" fetchpriority="high" decoding="async" onerror="this.onerror=null;this.src='assets/cinema-cockpit-calm.jpg';">
+                <img class="cinema-bg-img" src="assets/mobile/kid-calm-space.jpg" alt="" fetchpriority="high" decoding="async" onerror="this.onerror=null;this.src='assets/kid-calm-space.png';">
                 <div class="cinema-stars flow"></div>
                 <div class="s1-nebula" style="top:15%;left:-10%;"></div>
                 <div class="s1-nebula" style="top:55%;right:-15%;width:250px;height:250px;"></div>
@@ -4742,7 +4728,7 @@ function showSpaceIntro(name) {
             </div>
 
             <div class="cinema-scene s2-bg" id="scene2">
-                <img class="cinema-bg-img" src="assets/kid-asteroid-alert.png" alt="" fetchpriority="high" decoding="async" onerror="this.onerror=null;this.src='assets/cinema-cockpit-fault.jpg';">
+                <img class="cinema-bg-img" src="assets/mobile/kid-asteroid-alert.jpg" alt="" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='assets/kid-asteroid-alert.png';">
                 <div class="cinema-stars"></div>
                 <div class="cinema-vignette" style="background:radial-gradient(ellipse at center, transparent 30%, rgba(5,0,20,0.7) 100%);"></div>
                 <div class="s2-storm">${lightningsHTML}${particlesHTML}${smokeHTML}${embersHTML}</div>
@@ -4752,7 +4738,7 @@ function showSpaceIntro(name) {
             </div>
 
             <div class="cinema-scene s3-bg" id="scene3">
-                <img class="cinema-bg-img" src="assets/kid-repair-action.png" alt="" fetchpriority="high" decoding="async" onerror="this.onerror=null;this.src='assets/space-mission-xiaoyuan.jpg';">
+                <img class="cinema-bg-img" src="assets/mobile/kid-repair-action.jpg" alt="" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='assets/kid-repair-action.png';">
                 <div class="cinema-stars"></div>
                 <div class="cinema-vignette" style="background:radial-gradient(ellipse at center, transparent 26%, rgba(60,7,7,0.64) 100%);"></div>
                 <div class="s2-storm">${lightningsHTML}${particlesHTML}${smokeHTML}${embersHTML}</div>
@@ -4760,7 +4746,7 @@ function showSpaceIntro(name) {
             </div>
 
             <div class="cinema-scene s4-bg" id="scene4">
-                <img class="cinema-bg-img" src="assets/kid-holo-guide.png" alt="" fetchpriority="high" decoding="async" onerror="this.onerror=null;this.src='assets/cinema-cockpit-guide.jpg';">
+                <img class="cinema-bg-img" src="assets/mobile/kid-holo-guide.jpg" alt="" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='assets/kid-holo-guide.png';">
                 <div class="cinema-stars"></div>
                 <div class="cinema-vignette"></div>
                 ${dustHTML}

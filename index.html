@@ -2294,6 +2294,96 @@
             50% { box-shadow: 0 0 50px rgba(59,130,246,0.45), 0 0 90px rgba(96,165,250,0.2); border-color: rgba(96,165,250,0.75); }
         }
 
+        /* 错题修复准备页 */
+        .repair-gate {
+            position: fixed; top: 0; left: 50%; right: auto; bottom: 0;
+            width: min(100vw, 430px);
+            transform: translateX(-50%);
+            background:
+                linear-gradient(180deg, rgba(3,7,28,0.08) 0%, rgba(3,7,28,0.34) 42%, rgba(3,7,28,0.92) 100%),
+                url('assets/mobile/kid-launch.jpg') center top / cover no-repeat;
+            overflow: hidden;
+            z-index: 620;
+            color: #fff;
+        }
+        .repair-gate::after {
+            content: '';
+            position: absolute;
+            left: 0; right: 0; bottom: 0;
+            height: 58%;
+            background: linear-gradient(180deg, transparent 0%, rgba(4,8,32,0.7) 38%, rgba(4,8,32,0.98) 100%);
+            pointer-events: none;
+        }
+        .repair-gate-content {
+            position: relative;
+            z-index: 2;
+            min-height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+            text-align: center;
+            padding: 34px 24px 72px;
+        }
+        .repair-gate-kicker {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 7px 14px;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.13);
+            border: 1px solid rgba(255,255,255,0.16);
+            color: rgba(255,255,255,0.86);
+            font-size: 13px;
+            font-weight: 800;
+            margin-bottom: 14px;
+        }
+        .repair-gate h1 {
+            font-size: clamp(34px, 10vw, 48px);
+            line-height: 1.05;
+            letter-spacing: 0;
+            text-shadow: 0 0 24px rgba(96,165,250,0.48);
+            margin-bottom: 12px;
+        }
+        .repair-gate-desc {
+            font-size: 16px;
+            line-height: 1.65;
+            color: rgba(255,255,255,0.78);
+            margin-bottom: 24px;
+        }
+        .repair-gate-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            width: 100%;
+            margin-bottom: 24px;
+        }
+        .repair-gate-stat {
+            min-height: 58px;
+            border-radius: 14px;
+            background: rgba(5,9,50,0.58);
+            border: 1px solid rgba(147,197,253,0.18);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 3px;
+        }
+        .repair-gate-stat strong { font-size: 18px; }
+        .repair-gate-stat span { font-size: 11px; color: rgba(255,255,255,0.58); }
+        .repair-gate-btn {
+            width: min(100%, 300px);
+            height: 58px;
+            border: 0;
+            border-radius: 18px;
+            background: linear-gradient(135deg, #ff8a2a, #3b82f6);
+            color: #fff;
+            font-size: 19px;
+            font-weight: 900;
+            box-shadow: 0 12px 34px rgba(37,99,235,0.36);
+            cursor: pointer;
+        }
+        .repair-gate-btn:active { transform: scale(0.97); }
+
         /* ==================== 开场页动画 ==================== */
         .start-bg {
             position: fixed; top:0;left:50%;right:auto;bottom:0;
@@ -2381,6 +2471,21 @@
         @keyframes nebulaFloat1 { 0%{transform:translate(0,0) scale(1)} 100%{transform:translate(40px,20px) scale(1.15)} }
         @keyframes nebulaFloat2 { 0%{transform:translate(0,0) scale(1)} 100%{transform:translate(-30px,-25px) scale(1.1)} }
         @keyframes nebulaFloat3 { 0%{transform:translate(0,0) scale(0.9)} 100%{transform:translate(20px,15px) scale(1.2)} }
+
+        @media (max-width: 640px) {
+            .start-stars-1,
+            .start-stars-2,
+            .start-stars-3,
+            .start-nebula,
+            .start-asteroid,
+            .cinema-stars,
+            .cinema-dust,
+            .s2-storm,
+            .s1-trail {
+                animation: none !important;
+            }
+            .cinema-scene { transition: opacity 0.25s ease; }
+        }
 
         .start-asteroid {
             position: absolute; pointer-events: none;
@@ -4359,7 +4464,11 @@ function renderSpaceReport(params) {
         return;
     }
 
-    showStartScreen(name);
+    if (repairGatePassed()) {
+        showStartScreen(name);
+    } else {
+        showRepairGate(name);
+    }
 }
 
 
@@ -4405,10 +4514,52 @@ function loadPlanFocus(name) {
     } catch(e) { return null; }
 }
 
+function repairGateKey() {
+    return 'repair_gate_seen_' + (window.location.hash || 'entry');
+}
+
+function repairGatePassed() {
+    try { return sessionStorage.getItem(repairGateKey()) === '1'; } catch(e) { return false; }
+}
+
+function markRepairGatePassed() {
+    try { sessionStorage.setItem(repairGateKey(), '1'); } catch(e) {}
+}
+
+function isMobileFastMode() {
+    return window.matchMedia('(max-width: 640px)').matches || /MicroMessenger|WeChat|wxwork|Mobile/i.test(navigator.userAgent);
+}
+
+function showRepairGate(name) {
+    const app = document.getElementById('app');
+    const wrongCount = _spaceWrongItems.length;
+    app.innerHTML = `
+        <div class="repair-gate">
+            <div class="repair-gate-content">
+                <div class="repair-gate-kicker">新5年级摸底测</div>
+                <h1>错题修复</h1>
+                <div class="repair-gate-desc">${name}同学，先确认本次需要修复的错题，再进入小猿任务。</div>
+                <div class="repair-gate-stats">
+                    <div class="repair-gate-stat"><strong>${QUESTIONS.length}</strong><span>总题数</span></div>
+                    <div class="repair-gate-stat"><strong>${wrongCount}</strong><span>待修复</span></div>
+                    <div class="repair-gate-stat"><strong>${Math.max(0, QUESTIONS.length - wrongCount)}</strong><span>已掌握</span></div>
+                </div>
+                <button class="repair-gate-btn" onclick="enterStartScreen()">开始错题修复</button>
+            </div>
+        </div>
+    `;
+}
+
+function enterStartScreen() {
+    markRepairGatePassed();
+    showStartScreen(_spaceName);
+}
+
 function showStartScreen(name) {
     const app = document.getElementById('app');
     let asteroidsHTML = '';
-    for (let i = 0; i < 6; i++) {
+    const asteroidCount = isMobileFastMode() ? 2 : 6;
+    for (let i = 0; i < asteroidCount; i++) {
         const size = 4 + Math.random() * 10;
         const top = 10 + Math.random() * 80;
         const left = 5 + Math.random() * 90;
@@ -4468,6 +4619,13 @@ function handleStartClick(e) {
         if (ctx.state === 'suspended') ctx.resume();
         playTone(440, 0.01, 'sine', 0.01);
     } catch(e) {}
+    if (isMobileFastMode()) {
+        setTimeout(function() {
+            _startLaunching = false;
+            enterRepairMode();
+        }, 350);
+        return;
+    }
     playVoiceMp3(voiceAudio.ready, 2500);
     setTimeout(function() {
         _startLaunching = false;
